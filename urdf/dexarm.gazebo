@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+
+<robot>
+
+    <!-- ros_control plugin -->
+    <!-- <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/dexarm</robotNamespace>
+            <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        </plugin>
+    </gazebo> -->
+
+    <!-- <gazebo> -->
+    <!-- Joint state publisher -->
+    <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <parameters>$(find dexarm_moveit_config)/config/ros2_controller.yaml</parameters>
+    </plugin>
+    <!-- </gazebo> -->
+
+    <gazebo>
+        <plugin
+            filename="ignition-gazebo-joint-state-publisher-system"
+            name="ignition::gazebo::systems::JointStatePublisher">
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin
+            filename="ignition-gazebo-joint-position-controller-system"
+            name="ignition::gazebo::systems::JointPositionController">
+                <joint_name>bases</joint_name>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin
+            filename="ignition-gazebo-joint-position-controller-system"
+            name="ignition::gazebo::systems::JointPositionController">
+                <joint_name>B_Rot->In_1</joint_name>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin
+            filename="ignition-gazebo-joint-position-controller-system"
+            name="ignition::gazebo::systems::JointPositionController">
+                <joint_name>In_1->Join</joint_name>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin
+            filename="ignition-gazebo-joint-position-controller-system"
+            name="ignition::gazebo::systems::JointPositionController">
+                <joint_name>Join->In_2</joint_name>
+        </plugin>
+    </gazebo>
+    
+    <gazebo>
+        <plugin
+            filename="ignition-gazebo-joint-position-controller-system"
+            name="ignition::gazebo::systems::JointPositionController">
+                <joint_name>In_2->EE</joint_name>
+        </plugin>
+    </gazebo>
+
+    <gazebo reference="B_Fix">
+        <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="B_Rot">
+        <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="In_1">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <gazebo reference="Join">
+        <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="In_2">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <gazebo reference="EE">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+
+</robot>

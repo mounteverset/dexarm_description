@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<!-- Revolute-Revolute Manipulator -->
+<robot name="dexarm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Constants for robot dimensions -->
+    <xacro:property name="PI" value="3.1415926535897931"/>
+    <xacro:property name="mass" value="0.001" /> <!-- arbitrary value for mass -->
+    <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
+    <xacro:property name="height1" value="2" /> <!-- Link 1 -->
+    <xacro:property name="height2" value="1" /> <!-- Link 2 -->
+    <xacro:property name="height3" value="1" /> <!-- Link 3 -->
+
+    <!-- ARGUMENTS -->
+    <xacro:arg name="is_simulation" default="true" />
+    <xacro:arg name="use_fake_hardware" default="true" />
+    <xacro:arg name="fake_sensor_commands" default="false" />
+
+    <!-- Import all Gazebo-customization elements, including Gazebo colors -->
+    <xacro:include filename="$(find dexarm_description)/urdf/dexarm.gazebo" />
+
+    <!-- Import control_xacro -->
+    <!-- <xacro:include filename="$(find dexarm_moveit_config)/config/dexarm.ros2_control.xacro" /> -->
+
+    <!-- For simulation  -->
+    <link name="world"/>
+
+    <joint name="fixed" type="fixed">
+        <parent link="world"/>
+        <child link="B_Fix"/>
+    </joint>
+
+    <link name="B_Fix">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/00-B_Fix.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/00-B_Fix.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="1.0"/>
+            <inertia
+                ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 12.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+
+    <joint name="bases" type="revolute">
+        <parent link="B_Fix" />
+        <child link="B_Rot" />
+        <limit effort="30" lower="-1.91986" upper="1.91986" velocity="1.74533" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <link name="B_Rot">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/01-B_Rot.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/01-B_Rot.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="${mass}"/>
+            <inertia
+                ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 12.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+
+    <joint name="B_Rot->In_1" type="revolute">
+        <parent link="B_Rot" />
+        <child link="In_1" />
+        <limit effort="30" lower="0" upper="1.57" velocity="1.74533" />
+        <origin xyz="0 -0.02 0.13" rpy="0 0 0"/>
+        <axis xyz="1 0 0" />
+    </joint>
+
+    <link name="In_1">
+        <visual>
+            <origin xyz="0 0.022 -0.127" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/02-In_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0.022 -0.127" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/02-In_1.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0.022 -0.127" rpy="0 0 0" />
+            <mass value="${mass}"/>
+            <inertia
+                ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 12.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+
+    <joint name="In_1->Join" type="revolute">
+        <parent link="In_1" />
+        <child link="Join" />
+        <limit effort="30" lower="-1.57" upper="0" velocity="1.74533" />
+        <origin xyz="0 -0.0112 0.15" rpy="0 0 0"/>
+        <axis xyz="1 0 0" />
+        <mimic joint="B_Rot->In_1" multiplier="-1" offset="0" />
+    </joint>
+
+    <link name="Join">
+        <visual>
+            <origin xyz="0 0.0332 -0.277" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/03-Join.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0.0332 -0.277" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/03-Join.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0.0332 -0.277" rpy="0 0 0"/>
+            <mass value="${mass}"/>
+            <inertia
+                ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 12.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+
+    <joint name="Join->In_2" type="revolute">
+        <parent link="Join" />
+        <child link="In_2" />
+        <limit effort="30" lower="-0.6" upper="1.2" velocity="1.74533" />
+        <origin xyz="0.0 -0.0003 -0.0003" rpy="0 0 0"/>
+        <axis xyz="1 0 0" />
+    </joint>
+
+    <link name="In_2">
+        <visual>
+            <origin xyz="0 0.034 -0.276" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/04-In_2.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0.033 -0.279" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/04-In_2.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0.033 -0.279" rpy="0 0 0"/>
+            <mass value="${mass}"/>
+            <inertia
+                ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 12.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+
+    <joint name="In_2->EE" type="revolute">
+        <parent link="In_2" />
+        <child link="EE" />
+        <origin xyz="0 -0.138 -0.058" rpy="0 0 0"/>
+        <axis xyz="1 0 0" />
+        <limit lower="-3.14" upper="3.14" effort="30" velocity="1.74533" />
+        <mimic joint="Join->In_2" multiplier="-1" offset="0" />
+    </joint>
+
+    <link name="EE">
+        <visual>
+            <origin xyz="0.0 0.172 -0.218" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/05-EE.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.172 -0.215" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/05-EE.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0.0 0.172 -0.215" rpy="0 0 0" />
+            <mass value="${mass}"/>
+            <inertia
+                ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 12.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+
+    <joint name="EE->Suction" type="fixed">
+        <parent link="EE" />
+        <child link="Suction" />
+        <limit effort="30" lower="-0.6" upper="1.2" velocity="1.74533" />
+        <origin xyz="0 -0.05 0.01" rpy="0 0 0"/>
+        <axis xyz="1 0 0" />
+    </joint> 
+
+    <link name="Suction">
+        <visual>
+            <origin xyz="-0.077 -0.134 -0.003" rpy="0 3.14 1.57" />
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/M01-Suction.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+            <collision>
+            <origin xyz="-0.077 -0.134 -0.003" rpy="0 3.14 1.57"/>
+            <geometry>
+                <mesh filename="package://dexarm_description/urdf/STL/M01-Suction.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="-0.077 -0.134 -0.003" rpy="0 3.14 1.57"/>
+            <mass value="${mass}"/>
+            <inertia
+                ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 12.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+
+</robot>
