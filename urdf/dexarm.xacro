@@ -22,12 +22,12 @@
     <!-- <xacro:include filename="$(find dexarm_moveit_config)/config/dexarm.ros2_control.xacro" /> -->
 
     <!-- For simulation  -->
-    <link name="world"/>
+    <!-- <link name="world"/>
 
     <joint name="fixed" type="fixed">
         <parent link="world"/>
         <child link="B_Fix"/>
-    </joint>
+    </joint> -->
 
     <link name="B_Fix">
         <visual>
