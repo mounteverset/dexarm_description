@@ -1,0 +1,6 @@
+# Default initial positions for dexarm's ros2_control fake system
+
+initial_positions:
+  B_Rot->In_1: 0
+  Join->In_2: 0
+  bases: 0
