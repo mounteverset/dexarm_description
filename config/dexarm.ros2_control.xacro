@@ -28,17 +28,17 @@
                 </state_interface>
                 <state_interface name="velocity"/>
             </joint>
-            <joint name="B_Rot->In_1">
+            <joint name="B_Rot-In_1">
                 <command_interface name="position"/>
                 <state_interface name="position">
-                  <param name="initial_value">${initial_positions['B_Rot->In_1']}</param>
+                  <param name="initial_value">${initial_positions['B_Rot-In_1']}</param>
                 </state_interface>
                 <state_interface name="velocity"/>
             </joint>
-            <joint name="Join->In_2">
+            <joint name="Join-In_2">
                 <command_interface name="position"/>
                 <state_interface name="position">
-                  <param name="initial_value">${initial_positions['Join->In_2']}</param>
+                  <param name="initial_value">${initial_positions['Join-In_2']}</param>
                 </state_interface>
                 <state_interface name="velocity"/>
             </joint>

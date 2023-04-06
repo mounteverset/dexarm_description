@@ -10,10 +10,6 @@
     <xacro:arg name="use_gripper" default="false" /> <!-- gripper or vacuum suction -->
     <xacro:arg name="use_vacuum_suction" default="true" />
 
-    <!-- ROS Control related parameters-->
-    
-
-
     <!-- Constants for robot dimensions -->
     <xacro:property name="PI" value="3.1415926535897931"/>
     <xacro:property name="mass" value="0.001" /> <!-- arbitrary value for mass -->
@@ -233,11 +229,11 @@
     </link>
 
     <xacro:if value="$(arg use_vacuum_suction)">
-        <xacro include="suction_gripper.xacro"/>
+        <xacro:include filename="$(find dexarm_description)/urdf/suction_gripper.xacro"/>
     </xacro:if>
 
     <xacro:if value="$(arg use_gripper)">
-        <xacro include="soft_gripper.xacro"/>
+        <xacro:include filename="$(find dexarm_description)/urdf/soft_gripper.xacro"/>
     </xacro:if>
      
     <!-- <joint name="EE-Suction" type="fixed">
