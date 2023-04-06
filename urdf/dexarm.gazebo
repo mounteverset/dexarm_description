@@ -1,21 +1,13 @@
 <?xml version="1.0"?>
 
 <robot>
-
-    <!-- ros_control plugin -->
-    <!-- <gazebo>
-        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-            <robotNamespace>/dexarm</robotNamespace>
-            <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    <gazebo>
+        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+            <parameters>$(find dexarm_moveit_config)/config/ros2_controller.yaml</parameters>
+            <controller_manager_node_name>controller_manager</controller_manager_node_name>
         </plugin>
-    </gazebo> -->
+    </gazebo>
 
-    <!-- <gazebo> -->
-    <!-- Joint state publisher -->
-    <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-        <parameters>$(find dexarm_moveit_config)/config/ros2_controller.yaml</parameters>
-    </plugin>
-    <!-- </gazebo> -->
 
     <gazebo>
         <plugin

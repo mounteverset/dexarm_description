@@ -2,6 +2,18 @@
 <!-- Revolute-Revolute Manipulator -->
 <robot name="dexarm" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <!-- ARGUMENTS -->
+    <xacro:arg name="is_simulation" default="true" />
+    <xacro:arg name="use_fake_hardware" default="true" />
+    <xacro:arg name="fake_sensor_commands" default="false" />
+    <xacro:arg name="prefix" default="" />
+    <xacro:arg name="use_gripper" default="false" /> <!-- gripper or vacuum suction -->
+    <xacro:arg name="use_vacuum_suction" default="true" />
+
+    <!-- ROS Control related parameters-->
+    
+
+
     <!-- Constants for robot dimensions -->
     <xacro:property name="PI" value="3.1415926535897931"/>
     <xacro:property name="mass" value="0.001" /> <!-- arbitrary value for mass -->
@@ -9,19 +21,14 @@
     <xacro:property name="height1" value="2" /> <!-- Link 1 -->
     <xacro:property name="height2" value="1" /> <!-- Link 2 -->
     <xacro:property name="height3" value="1" /> <!-- Link 3 -->
-
-    <!-- ARGUMENTS -->
-    <xacro:arg name="is_simulation" default="true" />
-    <xacro:arg name="use_fake_hardware" default="true" />
-    <xacro:arg name="fake_sensor_commands" default="false" />
     
     <!-- dexarm_description/urdf/initial_positions.yaml -->
     <!-- <xacro:arg name="initial_positions_file" default="$(find dexarm_description)/urdf/initial_positions.yaml)" /> -->
     
-    <xacro:arg name="initial_positions_file" default="/home/luke/dexarm_ws/src/dexarm_description/urdf/initial_positions.yaml" />
+    <xacro:arg name="initial_positions_file" default="$(find dexarm_description)/config/initial_positions.yaml" />
 
     <!-- convert to property to use substitution in function -->
-   <!-- <xacro:property name="initial_positions_file" default="$(arg initial_positions_file)"/> -->
+    <!-- <xacro:property name="initial_positions_file" default="$(arg initial_positions_file)"/> -->
 
     <!-- Import all Gazebo-customization elements, including Gazebo colors -->
     <xacro:if value="$(arg is_simulation)">
@@ -31,7 +38,7 @@
 
     <!-- Import control_xacro -->
     <!-- <xacro:include filename="/home/luke/dexarm_ws/src/dexarm_moveit_config/config/dexarm.ros2_control.xacro" /> -->
-    <xacro:include filename="dexarm.ros2_control.xacro" />
+    <xacro:include filename="$(find dexarm_description)/config/dexarm.ros2_control.xacro" />
 
     <xacro:dexarm_ros2_control name="dexarm" initial_positions_file="$(arg initial_positions_file)"/>
     <!-- <xacro:dexarm_ros2_control name="dexarm" initial_positions_file="${xacro.load_yaml($(find dexarm_description)/urdf/inital_positions.yaml)}"/> -->
@@ -99,7 +106,7 @@
         </inertial>
     </link>
 
-    <joint name="B_Rot->In_1" type="revolute">
+    <joint name="B_Rot-In_1" type="revolute">
         <parent link="B_Rot" />
         <child link="In_1" />
         <limit effort="30" lower="0" upper="1.57" velocity="1.74533" />
@@ -130,7 +137,7 @@
         </inertial>
     </link>
 
-    <joint name="In_1->Join" type="revolute">
+    <joint name="In_1-Join" type="revolute">
         <parent link="In_1" />
         <child link="Join" />
         <limit effort="30" lower="-1.57" upper="0" velocity="1.74533" />
@@ -162,7 +169,7 @@
         </inertial>
     </link>
 
-    <joint name="Join->In_2" type="revolute">
+    <joint name="Join-In_2" type="revolute">
         <parent link="Join" />
         <child link="In_2" />
         <limit effort="30" lower="-0.6" upper="1.2" velocity="1.74533" />
@@ -193,7 +200,7 @@
         </inertial>
     </link>
 
-    <joint name="In_2->EE" type="revolute">
+    <joint name="In_2-EE" type="revolute">
         <parent link="In_2" />
         <child link="EE" />
         <origin xyz="0 -0.138 -0.058" rpy="0 0 0"/>
@@ -225,7 +232,15 @@
         </inertial>
     </link>
 
-    <joint name="EE->Suction" type="fixed">
+    <xacro:if value="$(arg use_vacuum_suction)">
+        <xacro include="suction_gripper.xacro"/>
+    </xacro:if>
+
+    <xacro:if value="$(arg use_gripper)">
+        <xacro include="soft_gripper.xacro"/>
+    </xacro:if>
+     
+    <!-- <joint name="EE-Suction" type="fixed">
         <parent link="EE" />
         <child link="Suction" />
         <limit effort="30" lower="-0.6" upper="1.2" velocity="1.74533" />
@@ -254,6 +269,6 @@
                 iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
                 izz="${mass / 12.0 * (width*width + width*width)}"/>
         </inertial>
-    </link>
+    </link> -->
 
 </robot>
