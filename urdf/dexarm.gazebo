@@ -1,58 +1,9 @@
 <?xml version="1.0"?>
 
 <robot>
-    <gazebo>
-        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-            <parameters>$(find dexarm_moveit_config)/config/ros2_controller.yaml</parameters>
-            <controller_manager_node_name>controller_manager</controller_manager_node_name>
-        </plugin>
-    </gazebo>
-
-
-    <gazebo>
-        <plugin
-            filename="ignition-gazebo-joint-state-publisher-system"
-            name="ignition::gazebo::systems::JointStatePublisher">
-        </plugin>
-    </gazebo>
-
-    <gazebo>
-        <plugin
-            filename="ignition-gazebo-joint-position-controller-system"
-            name="ignition::gazebo::systems::JointPositionController">
-                <joint_name>bases</joint_name>
-        </plugin>
-    </gazebo>
-
-    <gazebo>
-        <plugin
-            filename="ignition-gazebo-joint-position-controller-system"
-            name="ignition::gazebo::systems::JointPositionController">
-                <joint_name>B_Rot->In_1</joint_name>
-        </plugin>
-    </gazebo>
-
-    <gazebo>
-        <plugin
-            filename="ignition-gazebo-joint-position-controller-system"
-            name="ignition::gazebo::systems::JointPositionController">
-                <joint_name>In_1->Join</joint_name>
-        </plugin>
-    </gazebo>
-
-    <gazebo>
-        <plugin
-            filename="ignition-gazebo-joint-position-controller-system"
-            name="ignition::gazebo::systems::JointPositionController">
-                <joint_name>Join->In_2</joint_name>
-        </plugin>
-    </gazebo>
-    
-    <gazebo>
-        <plugin
-            filename="ignition-gazebo-joint-position-controller-system"
-            name="ignition::gazebo::systems::JointPositionController">
-                <joint_name>In_2->EE</joint_name>
+    <gazebo>  
+        <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+            <parameters>$(find dexarm_description)/config/ros2_controller.yaml</parameters>           
         </plugin>
     </gazebo>
 
