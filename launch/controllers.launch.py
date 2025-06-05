@@ -56,7 +56,12 @@ def generate_launch_description():
         Node(
             package="controller_manager",
             executable="spawner",
-            arguments=['-t:= joint_trajectory_controller', 'joint_state_broadcaster'],
+            arguments=[
+                "joint_state_broadcaster",
+                "joint_trajectory_controller",
+                "--controller-manager",
+                "/controller_manager",
+            ],
             output="screen",
         )
     )
