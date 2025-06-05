@@ -14,13 +14,13 @@ This package contains the URDF model, meshes, and associated configuration files
 
     source ~/ros2_ws/install/setup.bash
 
-For the **Usage Guidelines**, users typically want to know how to visualize the robot model in RViz or launch it in a simulation environment. Assuming the package includes a launch file for visualization, the instructions might look like this:
+For the **Usage Guidelines**, users typically want to know how to visualize the robot model in RViz or launch it in a simulation environment. The `launch/` directory provides `controllers.launch.py`, which starts the robot state publisher and loads the controllers needed for visualization.
 
 ## Usage
 
 To visualize the DexArm model in RViz:
 
-  ros2 launch dexarm_description view_dexarm.launch.py
+  ros2 launch dexarm_description controllers.launch.py
 
 ## File Structure
 
